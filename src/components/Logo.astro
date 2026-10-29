@@ -1,0 +1,26 @@
+---
+// Het officiële ETI N.V.-logo (ongewijzigd, alleen bijgesneden uit het aangeleverde bestand).
+interface Props {
+  height?: number;
+  eager?: boolean;
+  class?: string;
+}
+const { height = 52, eager = false, class: className } = Astro.props;
+const ratio = 758 / 290;
+---
+
+<picture>
+  <source type="image/webp" srcset="/images/eti-logo-360.webp 360w, /images/eti-logo-720.webp 720w" sizes={`${Math.round(height * ratio)}px`} />
+  <img
+    src="/images/eti-logo-360.png"
+    srcset="/images/eti-logo-360.png 360w, /images/eti-logo-720.png 720w"
+    sizes={`${Math.round(height * ratio)}px`}
+    width={Math.round(height * ratio)}
+    height={height}
+    alt="Entire Technical Installations N.V."
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : undefined}
+    decoding="async"
+    class={className}
+  />
+</picture>

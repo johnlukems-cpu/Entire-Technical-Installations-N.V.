@@ -1,0 +1,230 @@
+---
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import ContactValue from './ContactValue.astro';
+import { site, nav } from '../data/site';
+import { services } from '../data/services';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="footer-band">
+    <div class="container footer-band-inner">
+      <p class="slogan">{site.slogan}</p>
+      <a href="/contact/#offerte" class="btn btn--yellow">
+        Vraag een offerte aan
+        <Icon name="arrow-right" class="icon-arrow" />
+      </a>
+    </div>
+  </div>
+
+  <div class="container footer-grid">
+    <div class="footer-col footer-about">
+      <a href="/" class="footer-logo" aria-label="Naar de homepage">
+        <Logo height={70} />
+      </a>
+      <p class="footer-name">{site.name}</p>
+      <p>
+        Technisch installatiebedrijf voor particulieren en bedrijven in Suriname: elektra,
+        airconditioning, water, gas, alarminstallaties en onderhoud.
+      </p>
+      {
+        site.social.length > 0 && (
+          <ul class="social" aria-label="Sociale media">
+            {site.social.map((s) => (
+              <li>
+                <a href={s.url} rel="noopener" target="_blank">
+                  {s.label}
+                  <span class="visually-hidden"> (opent in een nieuw venster)</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    <nav class="footer-col" aria-label="Footer navigatie">
+      <h2 class="footer-title">Navigatie</h2>
+      <ul>
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav class="footer-col" aria-label="Onze diensten">
+      <h2 class="footer-title">Diensten</h2>
+      <ul>
+        {services.map((s) => <li><a href={`/diensten/${s.slug}/`}>{s.title}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="footer-col">
+      <h2 class="footer-title">Contact</h2>
+      <ul class="contact-list">
+        <li>
+          <Icon name="phone" size={18} />
+          <span><span class="visually-hidden">Telefoon: </span><ContactValue type="phone" value={site.contact.phone} /></span>
+        </li>
+        <li>
+          <Icon name="mail" size={18} />
+          <span><span class="visually-hidden">E-mail: </span><ContactValue type="email" value={site.contact.email} /></span>
+        </li>
+        <li>
+          <Icon name="map-pin" size={18} />
+          <span><span class="visually-hidden">Adres: </span><ContactValue type="text" value={site.contact.address} /></span>
+        </li>
+        <li>
+          <Icon name="clock" size={18} />
+          <span>
+            <span class="visually-hidden">Openingstijden: </span>
+            {
+              site.contact.openingHours ? (
+                site.contact.openingHours.map((o) => (
+                  <span class="hours">
+                    {o.days}: {o.hours}
+                  </span>
+                ))
+              ) : (
+                <ContactValue type="text" value={null} />
+              )
+            }
+          </span>
+        </li>
+      </ul>
+      <p class="area">Werkgebied: Suriname</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <p>&copy; {year} {site.name}. Alle rechten voorbehouden.</p>
+      <ul>
+        <li><a href="/privacyverklaring/">Privacyverklaring</a></li>
+        <li><a href="/algemene-voorwaarden/">Algemene voorwaarden</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--navy-900);
+    color: #b9c7e2;
+    font-size: 0.97rem;
+  }
+  .footer-band {
+    background: var(--blue);
+    border-bottom: 4px solid var(--yellow);
+  }
+  .footer-band-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+    padding-block: 26px;
+  }
+  .slogan {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+    color: var(--white);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr 1.2fr 1.2fr;
+    gap: 40px;
+    padding-block: 64px 48px;
+  }
+  @media (max-width: 1000px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+  .footer-logo {
+    display: inline-block;
+    background: var(--white);
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    margin-bottom: 18px;
+  }
+  .footer-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .footer-title {
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 18px;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer-col li {
+    margin-bottom: 10px;
+  }
+  a {
+    color: #dbe5f7;
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--yellow);
+    text-decoration: underline;
+  }
+  .contact-list li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .contact-list .icon {
+    flex: none;
+    margin-top: 4px;
+    color: var(--yellow);
+  }
+  .hours {
+    display: block;
+  }
+  .area {
+    margin-top: 16px;
+    color: #8fa3c8;
+  }
+  .social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .footer-bottom-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px 24px;
+    padding-block: 22px;
+    font-size: 0.88rem;
+    color: #8fa3c8;
+  }
+  .footer-bottom p {
+    margin: 0;
+  }
+  .footer-bottom ul {
+    display: flex;
+    gap: 20px;
+  }
+</style>

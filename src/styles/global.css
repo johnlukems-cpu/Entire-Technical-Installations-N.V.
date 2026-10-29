@@ -1,0 +1,449 @@
+@import '@fontsource-variable/montserrat/wght.css';
+@import '@fontsource-variable/inter/wght.css';
+
+/* ===== Huisstijl (afgeleid van het ETI-logo) ===== */
+:root {
+  --blue: #1249a5;
+  --blue-600: #0f3f91;
+  --navy: #082d68;
+  --navy-900: #061f4a;
+  --yellow: #ffc400;
+  --yellow-600: #e6b000;
+  --red: #e8501f; /* vlam en alarmbel in het logo */
+  --white: #ffffff;
+  --bg-soft: #f4f7fc;
+  --bg-soft-2: #e9effa;
+  --text: #172b4d;
+  --text-muted: #4a5b78;
+  --border: #d9e2f1;
+
+  --font-heading: 'Montserrat Variable', 'Montserrat', system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --shadow-sm: 0 1px 2px rgba(8, 45, 104, 0.06), 0 2px 6px rgba(8, 45, 104, 0.05);
+  --shadow: 0 6px 24px rgba(8, 45, 104, 0.09);
+  --shadow-lg: 0 18px 50px rgba(8, 45, 104, 0.16);
+
+  --container: 1200px;
+  --gutter: clamp(16px, 4vw, 32px);
+  --header-h: 76px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  line-height: 1.18;
+  margin: 0 0 0.6em;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+h1 {
+  font-size: clamp(2.1rem, 5vw, 3.6rem);
+  font-weight: 800;
+}
+h2 {
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  font-weight: 800;
+}
+h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+p {
+  margin: 0 0 1em;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--blue);
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--navy);
+}
+
+:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -100px;
+  z-index: 1000;
+  background: var(--yellow);
+  color: var(--navy);
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+/* ===== Layout ===== */
+.container {
+  width: 100%;
+  max-width: calc(var(--container) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: clamp(56px, 9vw, 104px);
+}
+.section--soft {
+  background: var(--bg-soft);
+}
+.section--navy {
+  background: var(--navy);
+  color: #dbe5f7;
+}
+.section--navy h2,
+.section--navy h3 {
+  color: var(--white);
+}
+
+.section-head {
+  max-width: 720px;
+  margin-bottom: clamp(32px, 5vw, 56px);
+}
+.section-head--center {
+  text-align: center;
+  margin-inline: auto;
+}
+.section-head p {
+  color: var(--text-muted);
+  font-size: 1.125rem;
+}
+.section--navy .section-head p {
+  color: #c4d3ee;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 14px;
+}
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--yellow);
+}
+.section--navy .eyebrow {
+  color: var(--yellow);
+}
+
+.grid {
+  display: grid;
+  gap: clamp(20px, 2.5vw, 28px);
+}
+.grid--3 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+}
+@media (min-width: 1040px) {
+  .grid--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.grid--2 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+}
+
+/* ===== Knoppen ===== */
+.btn {
+  --btn-bg: var(--blue);
+  --btn-fg: var(--white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  border: 2px solid var(--btn-bg);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.98rem;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+.btn:hover {
+  color: var(--btn-fg);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.btn:active {
+  transform: translateY(0);
+}
+.btn .icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  transition: transform 0.18s ease;
+}
+.btn:hover .icon-arrow {
+  transform: translateX(3px);
+}
+.btn--yellow {
+  --btn-bg: var(--yellow);
+  --btn-fg: var(--navy);
+}
+.btn--yellow:hover {
+  --btn-bg: #ffd034;
+}
+.btn--primary:hover {
+  --btn-bg: var(--blue-600);
+}
+.btn--outline {
+  background: transparent;
+  --btn-fg: var(--blue);
+  border-color: var(--blue);
+}
+.btn--outline:hover {
+  background: var(--blue);
+  color: var(--white);
+}
+.btn--ghost-light {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.55);
+  --btn-fg: var(--white);
+}
+.btn--ghost-light:hover {
+  background: var(--white);
+  color: var(--navy);
+}
+.btn--block {
+  width: 100%;
+}
+.btn[disabled] {
+  opacity: 0.65;
+  cursor: progress;
+  transform: none;
+}
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: var(--blue);
+}
+.link-arrow .icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.18s ease;
+}
+.link-arrow:hover .icon {
+  transform: translateX(4px);
+}
+
+/* ===== Lijsten ===== */
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25em;
+  display: grid;
+  gap: 10px;
+}
+.checklist li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.checklist .icon {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 3px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: rgba(255, 196, 0, 0.22);
+  color: var(--navy);
+}
+
+/* ===== Icoonbadges per dienst (kleuren uit het logo) ===== */
+.icon-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  flex: none;
+}
+.icon-badge .icon {
+  width: 30px;
+  height: 30px;
+}
+.accent-yellow {
+  background: #fff4cc;
+  color: #b58700;
+}
+.accent-blue {
+  background: #e3ecfb;
+  color: var(--blue);
+}
+.accent-red {
+  background: #fde6dd;
+  color: var(--red);
+}
+.accent-navy {
+  background: #e1e7f2;
+  color: var(--navy);
+}
+
+/* ===== Plaatshouders voor nog aan te leveren gegevens ===== */
+.placeholder {
+  display: inline-block;
+  padding: 1px 8px;
+  border: 1px dashed currentColor;
+  border-radius: 6px;
+  font-style: italic;
+  opacity: 0.8;
+  font-size: 0.95em;
+}
+.placeholder-box {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--bg-soft),
+    var(--bg-soft) 12px,
+    #eef3fb 12px,
+    #eef3fb 24px
+  );
+  color: var(--text-muted);
+}
+.placeholder-box strong {
+  color: var(--navy);
+}
+.placeholder-tag {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--navy);
+  color: var(--yellow);
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+/* ===== Animaties bij scrollen (alleen met JavaScript actief) ===== */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+  transition-delay: var(--reveal-delay, 0s);
+}
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ===== Proza (juridische pagina's) ===== */
+.prose {
+  max-width: 760px;
+}
+.prose h2 {
+  font-size: 1.5rem;
+  margin-top: 1.8em;
+}
+.prose ul {
+  padding-left: 1.2em;
+}
+.prose li {
+  margin-bottom: 0.4em;
+}

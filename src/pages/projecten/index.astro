@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import { services } from '../../data/services';
+import { projects, type Project } from '../../data/projects';
+import type { Service } from '../../data/services';
+
+// Per categorie: echte projecten, of één plaatshouder als er nog geen project is.
+const cards = services.flatMap((service): { service: Service; project?: Project }[] => {
+  const real = projects.filter((p) => p.service === service.slug);
+  return real.length ? real.map((project) => ({ service, project })) : [{ service }];
+});
+---
+
+<BaseLayout
+  title="Projecten – technische installaties in Suriname"
+  description="Bekijk projecten van ETI N.V.: elektrische installaties, airconditioning, water en sanitair, gas en verwarming, alarminstallaties en technisch onderhoud in Suriname."
+>
+  <PageHero
+    eyebrow="Projecten"
+    title="Ons werk in de praktijk"
+    intro="Een overzicht van projecten per vakgebied. Filter op categorie om gericht te zoeken."
+    crumbs={[{ label: 'Projecten' }]}
+  />
+
+  <section class="section">
+    <div class="container">
+      {
+        projects.length === 0 && (
+          <div class="placeholder-box notice" role="note">
+            <span class="placeholder-tag">Plaatshouder</span>
+            <p>
+              <strong>De projectgalerij wordt binnenkort gevuld.</strong> Hieronder ziet u per vakgebied een
+              plaatshouder. Zodra foto's en informatie van gerealiseerde projecten beschikbaar zijn, worden deze hier
+              getoond.
+            </p>
+          </div>
+        )
+      }
+
+      <div class="filters" role="group" aria-label="Filter projecten op categorie" data-filters>
+        <button type="button" class="filter" aria-pressed="true" data-filter="alle">Alle categorieën</button>
+        {
+          services.map((s) => (
+            <button type="button" class="filter" aria-pressed="false" data-filter={s.slug}>
+              {s.title}
+            </button>
+          ))
+        }
+      </div>
+      <p class="visually-hidden" aria-live="polite" data-filter-status></p>
+
+      <div class="grid grid--3" data-project-grid>
+        {cards.map(({ service, project }) => <ProjectCard service={service} project={project} />)}
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner
+    title="Heeft u een vergelijkbaar project?"
+    text="Neem contact met ons op en vertel ons over uw plannen. Wij denken graag met u mee."
+  />
+</BaseLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-project-grid] [data-category]');
+  const status = document.querySelector<HTMLElement>('[data-filter-status]')!;
+
+  buttons.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const f = btn.dataset.filter!;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      let count = 0;
+      cards.forEach((c) => {
+        const show = f === 'alle' || c.dataset.category === f;
+        c.hidden = !show;
+        if (show) {
+          count++;
+          c.classList.add('is-visible');
+        }
+      });
+      status.textContent = `${count} ${count === 1 ? 'item' : 'items'} getoond`;
+    }),
+  );
+</script>
+
+<style>
+  .notice {
+    margin-bottom: 32px;
+  }
+  .notice p {
+    margin: 0;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .filter {
+    font: inherit;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px 16px;
+    min-height: 44px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    color: var(--navy);
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+  }
+  .filter:hover {
+    border-color: var(--blue);
+  }
+  .filter[aria-pressed='true'] {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: var(--white);
+  }
+</style>

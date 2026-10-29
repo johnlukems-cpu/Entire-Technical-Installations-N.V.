@@ -1,0 +1,198 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import { services, type Service } from '../../data/services';
+import { projects } from '../../data/projects';
+
+export const getStaticPaths = (() =>
+  services.map((service) => ({ params: { slug: service.slug }, props: { service } }))) satisfies GetStaticPaths;
+
+interface Props {
+  service: Service;
+}
+const { service } = Astro.props;
+const others = services.filter((s) => s.slug !== service.slug).slice(0, 3);
+const related = projects.filter((p) => p.service === service.slug);
+const isAlarm = service.slug === 'alarminstallaties-en-beveiliging';
+
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: service.title,
+  serviceType: service.title,
+  description: service.description,
+  areaServed: { '@type': 'Country', name: 'Suriname' },
+  provider: { '@id': new URL('/#bedrijf', Astro.site).href },
+};
+---
+
+<BaseLayout title={service.seoTitle} description={service.seoDescription} jsonLd={[serviceLd]}>
+  <PageHero
+    eyebrow="Onze diensten"
+    title={service.title}
+    intro={service.summary}
+    crumbs={[{ label: 'Diensten', href: '/diensten/' }, { label: service.title }]}
+  >
+    <div class="hero-actions">
+      <a href={`/contact/?dienst=${service.slug}#offerte`} class="btn btn--yellow">
+        Vraag een offerte aan
+        <Icon name="arrow-right" class="icon-arrow" />
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container detail">
+      <div class="detail-main">
+        <div class="intro-row">
+          <span class={`icon-badge accent-${service.accent}`}><Icon name={service.icon} /></span>
+          <p class="detail-lead">{service.description}</p>
+        </div>
+
+        {
+          service.details.map((d) => (
+            <div class="detail-block" data-reveal>
+              <h2>{d.heading}</h2>
+              <p>{d.text}</p>
+            </div>
+          ))
+        }
+
+        {
+          isAlarm && (
+            <p class="logo-note" data-reveal>
+              <Icon name="bell-ring" size={20} />
+              <span>
+                De alarmbel in het logo van ETI N.V. staat voor deze dienst: alarminstallaties en beveiligingssystemen zijn
+                een vast onderdeel van ons werk.
+              </span>
+            </p>
+          )
+        }
+      </div>
+
+      <aside class="detail-aside" aria-labelledby="werk-titel">
+        <div class="aside-card">
+          <h2 id="werk-titel">Werkzaamheden</h2>
+          <ul class="checklist">
+            {
+              service.tasks.map((t) => (
+                <li>
+                  <Icon name="check" />
+                  <span>{t}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <a href={`/contact/?dienst=${service.slug}#offerte`} class="btn btn--primary btn--block">
+            Vraag een offerte aan
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  {
+    related.length > 0 && (
+      <section class="section section--soft">
+        <div class="container">
+          <h2>Projecten in deze categorie</h2>
+          <ul>
+            {related.map((p) => (
+              <li>
+                <a href={`/projecten/${p.slug}/`}>{p.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <CtaBanner />
+
+  <section class="section section--soft" aria-labelledby="andere-titel">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Meer diensten</p>
+        <h2 id="andere-titel">Bekijk ook onze andere diensten</h2>
+      </div>
+      <div class="grid grid--3">
+        {others.map((s) => <ServiceCard service={s} index={services.indexOf(s)} />)}
+      </div>
+      <p class="all-link"><a href="/diensten/" class="link-arrow">Alle diensten bekijken <Icon name="arrow-right" /></a></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-actions {
+    margin-top: 28px;
+  }
+  .detail {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .detail {
+      grid-template-columns: 1fr;
+    }
+  }
+  .intro-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+  .detail-lead {
+    font-size: 1.15rem;
+    margin: 0;
+  }
+  .detail-block {
+    padding-top: 24px;
+    margin-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .detail-block h2 {
+    font-size: 1.35rem;
+  }
+  .detail-block p {
+    color: var(--text-muted);
+  }
+  .logo-note {
+    display: flex;
+    gap: 12px;
+    padding: 16px 18px;
+    margin-top: 28px;
+    border-radius: var(--radius);
+    background: #fde6dd;
+    color: #7a2a10;
+  }
+  .logo-note .icon {
+    flex: none;
+    color: var(--red);
+    margin-top: 3px;
+  }
+  .detail-aside {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+  .aside-card {
+    background: var(--bg-soft);
+    border-radius: var(--radius-lg);
+    padding: 30px 28px;
+    border-top: 5px solid var(--yellow);
+  }
+  .aside-card h2 {
+    font-size: 1.3rem;
+  }
+  .all-link {
+    margin-top: 32px;
+  }
+</style>

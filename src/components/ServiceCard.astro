@@ -1,0 +1,107 @@
+---
+import Icon from './Icon.astro';
+import type { Service } from '../data/services';
+
+interface Props {
+  service: Service;
+  index?: number;
+  headingLevel?: 'h2' | 'h3';
+}
+const { service, index = 0, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+---
+
+<article class={`service-card service-card--${service.accent}`} data-reveal style={`--reveal-delay:${(index % 3) * 0.08}s`}>
+  <div class="card-top">
+    <span class={`icon-badge accent-${service.accent}`}>
+      <Icon name={service.icon} />
+    </span>
+    <span class="card-num" aria-hidden="true">0{index + 1}</span>
+  </div>
+  <Heading class="card-title">{service.title}</Heading>
+  <p class="card-text">{service.summary}</p>
+  <a href={`/diensten/${service.slug}/`} class="link-arrow card-link">
+    Meer informatie<span class="visually-hidden"> over {service.title.toLowerCase()}</span>
+    <Icon name="arrow-right" />
+  </a>
+</article>
+
+<style>
+  .service-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px 28px 26px;
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+    overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: var(--card-accent, var(--blue));
+    transform: scaleX(0.18);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .service-card--yellow {
+    --card-accent: var(--yellow);
+  }
+  .service-card--blue {
+    --card-accent: var(--blue);
+  }
+  .service-card--red {
+    --card-accent: var(--red);
+  }
+  .service-card--navy {
+    --card-accent: var(--navy);
+  }
+  .service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: transparent;
+  }
+  .service-card:hover::before,
+  .service-card:focus-within::before {
+    transform: scaleX(1);
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 22px;
+  }
+  .card-num {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: var(--bg-soft-2);
+    line-height: 1;
+  }
+  .card-title {
+    font-size: 1.22rem;
+    margin-bottom: 10px;
+  }
+  .card-text {
+    color: var(--text-muted);
+    font-size: 1rem;
+    flex: 1;
+  }
+  .card-link {
+    margin-top: 6px;
+  }
+  /* Hele kaart klikbaar, link blijft het toegankelijke element */
+  .card-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+</style>

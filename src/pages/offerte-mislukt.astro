@@ -1,0 +1,20 @@
+---
+// Foutpagina voor bezoekers zonder JavaScript.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout title="Aanvraag niet verzonden" description="Uw offerteaanvraag kon niet worden verzonden." noindex>
+  <PageHero
+    title="Uw aanvraag is niet verzonden"
+    intro="Er ging iets mis, of niet alle verplichte velden waren correct ingevuld. Uw aanvraag is daardoor níet bij ons aangekomen."
+    crumbs={[{ label: 'Contact', href: '/contact/' }, { label: 'Niet verzonden' }]}
+  />
+  <section class="section">
+    <div class="container">
+      <p>Ga terug naar het formulier en probeer het opnieuw, of neem telefonisch of per e-mail contact met ons op.</p>
+      <a href="/contact/#offerte" class="btn btn--primary">Terug naar het formulier <Icon name="arrow-right" class="icon-arrow" /></a>
+    </div>
+  </section>
+</BaseLayout>

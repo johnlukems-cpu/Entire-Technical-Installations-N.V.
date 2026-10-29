@@ -1,0 +1,54 @@
+---
+// Wordt alleen getoond wanneer er echte klantbeoordelingen in src/data/testimonials.ts staan.
+import { testimonials } from '../data/testimonials';
+---
+
+{
+  testimonials.length > 0 && (
+    <section class="section section--soft" aria-labelledby="ervaringen-titel">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <p class="eyebrow">Klantervaringen</p>
+          <h2 id="ervaringen-titel">Wat klanten over ons zeggen</h2>
+        </div>
+        <div class="grid grid--3">
+          {testimonials.map((t) => (
+            <figure class="quote" data-reveal>
+              <blockquote>
+                <p>{t.quote}</p>
+              </blockquote>
+              <figcaption>
+                <strong>{t.name}</strong>
+                {t.context && <span>{t.context}</span>}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .quote {
+    margin: 0;
+    padding: 30px;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border-top: 4px solid var(--yellow);
+    box-shadow: var(--shadow-sm);
+  }
+  blockquote {
+    margin: 0 0 18px;
+    font-size: 1.05rem;
+  }
+  figcaption strong {
+    display: block;
+    color: var(--navy);
+    font-family: var(--font-heading);
+  }
+  figcaption span {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+</style>

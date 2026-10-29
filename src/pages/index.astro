@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import FeatureGrid from '../components/FeatureGrid.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Icon from '../components/Icon.astro';
+import { services } from '../data/services';
+import { coreValues, whyEti } from '../data/content';
+import { projects } from '../data/projects';
+
+const featuredProjects = projects.slice(0, 3);
+const placeholderServices = services.slice(0, 3);
+---
+
+<BaseLayout
+  title="Technische installaties in Suriname | Entire Technical Installations N.V."
+  rawTitle
+  description="ETI N.V. verzorgt elektrische installaties, airconditioning, water-, gas- en alarminstallaties en technisch onderhoud voor woningen en bedrijven in Suriname. Vraag een offerte aan."
+>
+  <Hero />
+
+  <!-- Diensten -->
+  <section class="section" id="diensten" aria-labelledby="diensten-titel">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <p class="eyebrow">Onze diensten</p>
+        <h2 id="diensten-titel">Technische installaties voor woningen en bedrijven</h2>
+        <p>
+          De symbolen in ons logo staan voor wat wij doen: elektra, koeling, water, gas en beveiliging. Aangevuld met
+          onderhoud en storingsservice bieden wij zes vakgebieden onder één dak.
+        </p>
+      </div>
+      <div class="grid grid--3">
+        {services.map((s, i) => <ServiceCard service={s} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner />
+
+  <!-- Over ons -->
+  <section class="section section--soft" aria-labelledby="over-titel">
+    <div class="container about">
+      <div class="about-copy" data-reveal>
+        <p class="eyebrow">Over ons</p>
+        <h2 id="over-titel">Uw partner in technische installaties</h2>
+        <p class="lead">
+          Entire Technical Installations N.V. is een technisch installatiebedrijf dat particulieren en bedrijven in
+          Suriname ondersteunt met uiteenlopende technische installatiewerkzaamheden. Wij richten ons op kwaliteit,
+          veiligheid, heldere communicatie en praktische oplossingen die aansluiten bij de behoeften van onze klanten.
+        </p>
+        <a href="/over-ons/" class="btn btn--outline">
+          Meer over ETI N.V.
+          <Icon name="arrow-right" class="icon-arrow" />
+        </a>
+      </div>
+      <div class="about-values">
+        <FeatureGrid items={coreValues} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Waarom ETI -->
+  <section class="section section--navy why" aria-labelledby="waarom-titel">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Waarom ETI?</p>
+        <h2 id="waarom-titel">Waarom kiezen voor ETI N.V.?</h2>
+        <p>Wij combineren meerdere technische vakgebieden en werken met aandacht voor kwaliteit, veiligheid en duidelijke afspraken.</p>
+      </div>
+      <FeatureGrid items={whyEti} variant="dark" />
+      <p class="why-more">
+        <a href="/waarom-eti/" class="link-arrow light">Lees meer over onze werkwijze <Icon name="arrow-right" /></a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Projecten -->
+  <section class="section" aria-labelledby="projecten-titel">
+    <div class="container">
+      <div class="section-head section-head--split">
+        <div>
+          <p class="eyebrow">Projecten</p>
+          <h2 id="projecten-titel">Een greep uit ons werk</h2>
+        </div>
+        <a href="/projecten/" class="btn btn--outline">
+          Alle projecten
+          <Icon name="arrow-right" class="icon-arrow" />
+        </a>
+      </div>
+      <div class="grid grid--3">
+        {
+          featuredProjects.length > 0
+            ? featuredProjects.map((p) => <ProjectCard project={p} service={services.find((s) => s.slug === p.service)!} />)
+            : placeholderServices.map((s) => <ProjectCard service={s} />)
+        }
+      </div>
+    </div>
+  </section>
+
+  <Testimonials />
+
+  <CtaBanner
+    title="Klaar om uw project te bespreken?"
+    text="Vertel ons wat u nodig heeft. Wij nemen contact met u op om de mogelijkheden door te nemen."
+  />
+</BaseLayout>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+  }
+  @media (max-width: 960px) {
+    .about {
+      grid-template-columns: 1fr;
+    }
+  }
+  .lead {
+    font-size: 1.12rem;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+  }
+  .about-values :global(.features) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .about-values :global(.feature) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 20px;
+    padding: 22px 24px;
+  }
+  .about-values :global(.feature-icon) {
+    grid-row: span 2;
+    margin: 0;
+  }
+  .about-values :global(.feature h3) {
+    margin-bottom: 4px;
+    font-size: 1.1rem;
+  }
+  .why-more {
+    margin: 36px 0 0;
+  }
+  .light {
+    color: var(--yellow);
+  }
+  .light:hover {
+    color: var(--white);
+  }
+  .section-head--split {
+    max-width: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .section-head--split h2 {
+    margin: 0;
+  }
+</style>

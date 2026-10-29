@@ -1,0 +1,416 @@
+---
+import Icon from './Icon.astro';
+import { SERVICE_OPTIONS, CONTACT_OPTIONS } from '../../shared/validation.mjs';
+
+// Optioneel: Cloudflare Turnstile als extra spambescherming (sitesleutel is openbaar).
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
+---
+
+<form
+  class="quote-form"
+  action="/api/offerte"
+  method="post"
+  novalidate
+  data-quote-form
+  aria-describedby="form-intro"
+>
+  <p id="form-intro" class="form-intro">
+    Velden met een <span class="req" aria-hidden="true">*</span> zijn verplicht.
+  </p>
+
+  <div class="form-alert form-alert--error" role="alert" data-form-error hidden></div>
+
+  <div class="form-grid">
+    <div class="field">
+      <label for="naam">Naam <span class="req" aria-hidden="true">*</span></label>
+      <input id="naam" name="naam" type="text" autocomplete="name" required maxlength="100" aria-describedby="naam-fout" />
+      <p class="field-error" id="naam-fout" data-error-for="naam"></p>
+    </div>
+
+    <div class="field">
+      <label for="bedrijf">Bedrijfsnaam <span class="optional">(optioneel)</span></label>
+      <input id="bedrijf" name="bedrijf" type="text" autocomplete="organization" maxlength="150" aria-describedby="bedrijf-fout" />
+      <p class="field-error" id="bedrijf-fout" data-error-for="bedrijf"></p>
+    </div>
+
+    <div class="field">
+      <label for="email">E-mailadres <span class="req" aria-hidden="true">*</span></label>
+      <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="200" aria-describedby="email-fout" />
+      <p class="field-error" id="email-fout" data-error-for="email"></p>
+    </div>
+
+    <div class="field">
+      <label for="telefoon">Telefoonnummer <span class="req" aria-hidden="true">*</span></label>
+      <input id="telefoon" name="telefoon" type="tel" autocomplete="tel" inputmode="tel" required maxlength="25" placeholder="+597 …" aria-describedby="telefoon-fout" />
+      <p class="field-error" id="telefoon-fout" data-error-for="telefoon"></p>
+    </div>
+
+    <div class="field">
+      <label for="dienst">Gewenste dienst <span class="req" aria-hidden="true">*</span></label>
+      <select id="dienst" name="dienst" required aria-describedby="dienst-fout">
+        <option value="">Maak een keuze</option>
+        {SERVICE_OPTIONS.map((o) => <option value={o.value}>{o.label}</option>)}
+      </select>
+      <p class="field-error" id="dienst-fout" data-error-for="dienst"></p>
+    </div>
+
+    <div class="field">
+      <label for="locatie">Locatie van het project <span class="req" aria-hidden="true">*</span></label>
+      <input id="locatie" name="locatie" type="text" autocomplete="address-level2" required maxlength="150" placeholder="Bijv. wijk of plaats" aria-describedby="locatie-fout" />
+      <p class="field-error" id="locatie-fout" data-error-for="locatie"></p>
+    </div>
+
+    <div class="field field--full">
+      <label for="omschrijving">Omschrijving van de aanvraag <span class="req" aria-hidden="true">*</span></label>
+      <textarea id="omschrijving" name="omschrijving" rows="6" required maxlength="3000" placeholder="Beschrijf kort wat u wilt laten doen, om wat voor pand het gaat en eventuele wensen of planning." aria-describedby="omschrijving-fout"></textarea>
+      <p class="field-error" id="omschrijving-fout" data-error-for="omschrijving"></p>
+    </div>
+
+    <fieldset class="field field--full" aria-describedby="contactmethode-fout">
+      <legend>Gewenste contactmethode <span class="req" aria-hidden="true">*</span></legend>
+      <div class="choices">
+        {
+          CONTACT_OPTIONS.map((o, i) => (
+            <label class="choice">
+              <input type="radio" name="contactmethode" value={o.value} required={i === 0} />
+              <span>{o.label}</span>
+            </label>
+          ))
+        }
+      </div>
+      <p class="field-error" id="contactmethode-fout" data-error-for="contactmethode"></p>
+    </fieldset>
+
+    <div class="field field--full">
+      <label class="choice choice--check">
+        <input type="checkbox" name="privacy" value="ja" required aria-describedby="privacy-fout" />
+        <span>
+          Ik geef toestemming om mijn gegevens te gebruiken voor het behandelen van deze aanvraag, zoals beschreven in de{' '}
+          <a href="/privacyverklaring/" target="_blank" rel="noopener">privacyverklaring<span class="visually-hidden"> (opent in een nieuw venster)</span></a>.
+          <span class="req" aria-hidden="true">*</span>
+        </span>
+      </label>
+      <p class="field-error" id="privacy-fout" data-error-for="privacy"></p>
+    </div>
+
+    <!-- Spambescherming: dit veld moet leeg blijven (onzichtbaar voor bezoekers). -->
+    <div class="hp" aria-hidden="true">
+      <label for="website">Laat dit veld leeg</label>
+      <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+    <input type="hidden" name="_t" value="" data-form-time />
+
+    {
+      turnstileSiteKey && (
+        <div class="field field--full">
+          <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-language="nl" />
+        </div>
+      )
+    }
+  </div>
+
+  <button type="submit" class="btn btn--primary submit-btn" data-submit>
+    <span data-submit-label>Verstuur offerteaanvraag</span>
+    <Icon name="send" />
+  </button>
+</form>
+
+<div class="form-success" role="status" tabindex="-1" data-form-success hidden>
+  <span class="success-icon"><Icon name="circle-check" size={34} /></span>
+  <h3>Bedankt, uw offerteaanvraag is verzonden</h3>
+  <p>
+    Wij hebben uw aanvraag in goede orde ontvangen en nemen zo spoedig mogelijk contact met u op via de door u gekozen
+    contactmethode.
+  </p>
+  <a href="/" class="link-arrow">Terug naar de homepage <Icon name="arrow-right" /></a>
+</div>
+
+{turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+
+<script>
+  import { validateQuote } from '../../shared/validation.mjs';
+
+  const form = document.querySelector<HTMLFormElement>('[data-quote-form]');
+  if (form) {
+    const success = document.querySelector<HTMLElement>('[data-form-success]')!;
+    const errorBox = form.querySelector<HTMLElement>('[data-form-error]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]')!;
+    const timeField = form.querySelector<HTMLInputElement>('[data-form-time]')!;
+    timeField.value = String(Date.now());
+
+    // Dienst vooraf selecteren via ?dienst=slug
+    const pre = new URLSearchParams(location.search).get('dienst');
+    const select = form.querySelector<HTMLSelectElement>('#dienst')!;
+    if (pre && [...select.options].some((o) => o.value === pre)) select.value = pre;
+
+    const values = () => {
+      const fd = new FormData(form);
+      const obj: Record<string, string> = {};
+      fd.forEach((v, k) => (obj[k] = typeof v === 'string' ? v : ''));
+      return obj;
+    };
+
+    const showErrors = (errors: Record<string, string>) => {
+      form.querySelectorAll<HTMLElement>('[data-error-for]').forEach((el) => {
+        const name = el.dataset.errorFor!;
+        const msg = errors[name] ?? '';
+        el.textContent = msg;
+        form.querySelectorAll<HTMLInputElement>(`[name="${name}"]`).forEach((input) => {
+          if (msg) input.setAttribute('aria-invalid', 'true');
+          else input.removeAttribute('aria-invalid');
+        });
+      });
+    };
+
+    let attempted = false;
+    form.addEventListener('input', () => {
+      if (attempted) showErrors(validateQuote(values()).errors);
+    });
+    form.addEventListener('change', () => {
+      if (attempted) showErrors(validateQuote(values()).errors);
+    });
+
+    const showFormError = (msg: string) => {
+      errorBox.textContent = msg;
+      errorBox.hidden = false;
+      errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      attempted = true;
+      errorBox.hidden = true;
+      const data = values();
+      const { ok, errors } = validateQuote(data);
+      showErrors(errors);
+      if (!ok) {
+        const first = form.querySelector<HTMLElement>('[aria-invalid="true"]');
+        first?.focus();
+        return;
+      }
+
+      submit.disabled = true;
+      submitLabel.textContent = 'Bezig met verzenden…';
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
+        let body: { ok?: boolean; message?: string; errors?: Record<string, string> } = {};
+        try {
+          body = await res.json();
+        } catch {
+          /* geen geldige JSON */
+        }
+        // Alleen een bevestiging tonen als de server de aflevering expliciet bevestigt.
+        if (res.ok && body.ok === true) {
+          form.hidden = true;
+          success.hidden = false;
+          success.focus();
+          success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        if (body.errors) showErrors(body.errors);
+        showFormError(
+          body.message ||
+            'Uw aanvraag kon niet worden verzonden. Probeer het later opnieuw of neem telefonisch of per e-mail contact met ons op.',
+        );
+      } catch {
+        showFormError(
+          'Er is geen verbinding met de server. Controleer uw internetverbinding en probeer het opnieuw, of neem telefonisch of per e-mail contact met ons op.',
+        );
+      } finally {
+        submit.disabled = false;
+        submitLabel.textContent = 'Verstuur offerteaanvraag';
+        const ts = (window as unknown as { turnstile?: { reset: () => void } }).turnstile;
+        ts?.reset();
+      }
+    });
+  }
+</script>
+
+<style>
+  .quote-form {
+    display: grid;
+    gap: 8px;
+  }
+  .form-intro {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 20px;
+  }
+  @media (max-width: 640px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  fieldset.field {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .field--full {
+    grid-column: 1 / -1;
+  }
+  label,
+  legend {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.93rem;
+    color: var(--navy);
+    margin-bottom: 6px;
+    padding: 0;
+  }
+  .req {
+    color: var(--red);
+  }
+  .optional {
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  select,
+  textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--white);
+    border: 1.5px solid #c6d3ea;
+    border-radius: 10px;
+    padding: 12px 14px;
+    min-height: 50px;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 140px;
+  }
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23082d68' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 40px;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 4px rgba(18, 73, 165, 0.15);
+  }
+  [aria-invalid='true'] {
+    border-color: #c62828 !important;
+    background-color: #fff8f8;
+  }
+  .field-error {
+    min-height: 1.35em;
+    margin: 4px 0 6px;
+    font-size: 0.86rem;
+    color: #b42318;
+    font-weight: 500;
+  }
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .choice {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border: 1.5px solid #c6d3ea;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-weight: 500;
+    color: var(--text);
+    margin: 0;
+  }
+  .choice:has(input:checked) {
+    border-color: var(--blue);
+    background: #eef3fc;
+  }
+  .choice input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--blue);
+    margin: 0;
+    flex: none;
+  }
+  .choice--check {
+    align-items: flex-start;
+    border: 0;
+    padding: 0;
+    font-size: 0.95rem;
+  }
+  .choice--check input {
+    margin-top: 3px;
+  }
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .submit-btn {
+    justify-self: start;
+    margin-top: 8px;
+    min-height: 54px;
+    padding-inline: 30px;
+  }
+  @media (max-width: 640px) {
+    .submit-btn {
+      justify-self: stretch;
+    }
+  }
+  .form-alert {
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+  .form-alert--error {
+    background: #fdecec;
+    border: 1px solid #f5c2c0;
+    color: #8a1c14;
+  }
+  .form-success {
+    text-align: center;
+    padding: 40px 24px;
+    border-radius: var(--radius-lg);
+    background: #eefaf2;
+    border: 1px solid #bfe6cc;
+  }
+  .form-success:focus {
+    outline: none;
+  }
+  .success-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #1e8e4f;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+</style>

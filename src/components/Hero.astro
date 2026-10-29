@@ -1,0 +1,280 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { services } from '../data/services';
+
+/**
+ * Achtergrondfoto voor de hero.
+ * Plaats een eigen foto van installatiewerkzaamheden in public/images/ (bijv. hero.webp,
+ * minimaal 1920px breed) en vul hieronder het pad in. Zolang dit `null` is, wordt een
+ * grafische achtergrond in de ETI-huisstijl getoond.
+ */
+const heroImage: string | null = null;
+const heroImageAlt = '';
+
+const symbols = services.filter((s) => s.slug !== 'technisch-onderhoud-en-storingsservice');
+---
+
+<section class:list={['hero', { 'hero--photo': heroImage }]} aria-labelledby="hero-titel">
+  {heroImage && <img class="hero-photo" src={heroImage} alt={heroImageAlt} fetchpriority="high" />}
+  <div class="hero-grid-bg" aria-hidden="true"></div>
+  <div class="hero-arc" aria-hidden="true"></div>
+
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <p class="hero-slogan">{site.slogan}</p>
+      <h1 id="hero-titel">
+        Complete technische installaties. <span>Betrouwbare oplossingen.</span>
+      </h1>
+      <p class="hero-lead">
+        Van elektrische installaties en airconditioning tot water-, gas- en beveiligingssystemen:
+        ETI N.V. biedt professionele technische oplossingen voor woningen en bedrijven in Suriname.
+      </p>
+      <div class="hero-actions">
+        <a href="/contact/#offerte" class="btn btn--yellow">
+          Vraag een offerte aan
+          <Icon name="arrow-right" class="icon-arrow" />
+        </a>
+        <a href="/diensten/" class="btn btn--ghost-light">Bekijk onze diensten</a>
+      </div>
+      <ul class="hero-points">
+        <li><Icon name="house" size={18} /> Voor woningen</li>
+        <li><Icon name="building-2" size={18} /> Voor bedrijven</li>
+        <li><Icon name="map-pin" size={18} /> In heel Suriname</li>
+      </ul>
+    </div>
+
+    <div class="hero-visual">
+      <p class="visual-title">Eén partner voor al uw technische installaties</p>
+      <ul class="symbol-list">
+        {
+          symbols.map((s, i) => (
+            <li style={`--i:${i}`}>
+              <a href={`/diensten/${s.slug}/`}>
+                <span class={`sym sym--${s.accent}`}>
+                  <Icon name={s.icon} />
+                </span>
+                <span class="sym-label">{s.shortTitle}</span>
+                <Icon name="chevron-right" size={18} class="sym-chev" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="visual-foot" href="/diensten/technisch-onderhoud-en-storingsservice/">
+        <Icon name="wrench" size={18} />
+        Plus technisch onderhoud en storingsservice
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(1200px 600px at 85% 10%, rgba(18, 73, 165, 0.9), transparent 60%),
+      linear-gradient(140deg, var(--navy-900) 0%, var(--navy) 55%, #0c3a86 100%);
+    color: #d3def3;
+    padding-block: clamp(56px, 9vw, 112px) clamp(72px, 10vw, 128px);
+  }
+  .hero-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-width: none;
+  }
+  .hero--photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(100deg, rgba(6, 31, 74, 0.95) 0%, rgba(8, 45, 104, 0.82) 50%, rgba(8, 45, 104, 0.45) 100%);
+  }
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse at 70% 40%, #000 20%, transparent 75%);
+  }
+  /* Boog verwijst naar de swoosh in het logo */
+  .hero-arc {
+    position: absolute;
+    left: -15%;
+    right: -15%;
+    bottom: -140px;
+    height: 260px;
+    border-radius: 50%;
+    border-top: 14px solid var(--yellow);
+    box-shadow: 0 -18px 0 -4px rgba(18, 73, 165, 0.9);
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+  }
+  @media (max-width: 960px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+    }
+    .hero {
+      padding-bottom: 120px;
+    }
+  }
+  .hero-slogan {
+    display: inline-block;
+    margin-bottom: 22px;
+    padding: 6px 14px;
+    background: var(--yellow);
+    color: var(--navy);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-style: italic;
+    font-size: clamp(0.82rem, 1.6vw, 0.95rem);
+    border-radius: 6px;
+    animation: fade-up 0.7s ease both;
+  }
+  h1 {
+    color: var(--white);
+    font-size: clamp(2.1rem, 4.4vw, 3.25rem);
+    animation: fade-up 0.7s 0.08s ease both;
+  }
+  h1 span {
+    color: var(--yellow);
+  }
+  .hero-lead {
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    max-width: 600px;
+    margin-bottom: 30px;
+    animation: fade-up 0.7s 0.16s ease both;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    animation: fade-up 0.7s 0.24s ease both;
+  }
+  .hero-points {
+    list-style: none;
+    padding: 0;
+    margin: 32px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    font-size: 0.95rem;
+    color: #c4d3ee;
+  }
+  .hero-points li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-points .icon {
+    color: var(--yellow);
+  }
+
+  .hero-visual {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+    color: var(--text);
+    animation: fade-up 0.8s 0.2s ease both;
+  }
+  .visual-title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    color: var(--navy);
+    font-size: 1.05rem;
+    margin-bottom: 16px;
+  }
+  .symbol-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .symbol-list li {
+    animation: fade-up 0.5s calc(0.35s + var(--i) * 0.08s) ease both;
+  }
+  .symbol-list a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: var(--bg-soft);
+    color: var(--navy);
+    text-decoration: none;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    transition:
+      background-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .symbol-list a:hover {
+    background: var(--bg-soft-2);
+    transform: translateX(4px);
+  }
+  .sym {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    flex: none;
+    color: var(--white);
+  }
+  .sym .icon {
+    width: 24px;
+    height: 24px;
+  }
+  .sym--yellow {
+    background: var(--yellow);
+    color: var(--navy);
+  }
+  .sym--blue {
+    background: var(--blue);
+  }
+  .sym--red {
+    background: var(--red);
+  }
+  .sym-label {
+    flex: 1;
+  }
+  .sym-chev {
+    color: var(--blue);
+  }
+  .visual-foot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

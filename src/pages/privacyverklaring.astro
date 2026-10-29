@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactValue from '../components/ContactValue.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title="Privacyverklaring"
+  description="Lees hoe Entire Technical Installations N.V. omgaat met persoonsgegevens die u via de website en het offerteformulier verstrekt."
+>
+  <PageHero title="Privacyverklaring" crumbs={[{ label: 'Privacyverklaring' }]} />
+  <section class="section">
+    <div class="container prose">
+      <div class="placeholder-box" role="note">
+        <span class="placeholder-tag">Concept</span>
+        <p style="margin:0">
+          Deze privacyverklaring is een concept en moet vóór publicatie door ETI N.V. worden gecontroleerd en zo
+          nodig juridisch worden getoetst.
+        </p>
+      </div>
+
+      <p>
+        {site.name} (hierna: "ETI N.V.", "wij") respecteert uw privacy. In deze verklaring leggen wij uit welke
+        persoonsgegevens wij via deze website verwerken, waarom wij dat doen en welke rechten u heeft.
+      </p>
+
+      <h2>Welke gegevens verwerken wij?</h2>
+      <p>Wanneer u het offerteformulier invult, verwerken wij de gegevens die u zelf invult:</p>
+      <ul>
+        <li>naam en (optioneel) bedrijfsnaam;</li>
+        <li>e-mailadres en telefoonnummer;</li>
+        <li>de gewenste dienst, de locatie van het project en de omschrijving van uw aanvraag;</li>
+        <li>uw voorkeur voor de manier waarop wij contact met u opnemen.</li>
+      </ul>
+      <p>
+        Om misbruik van het formulier te voorkomen, wordt uw IP-adres tijdelijk gebruikt om het aantal verzendingen te
+        beperken. Dit IP-adres wordt niet opgeslagen bij uw aanvraag.
+      </p>
+
+      <h2>Waarvoor gebruiken wij uw gegevens?</h2>
+      <p>
+        Wij gebruiken uw gegevens uitsluitend om uw aanvraag te behandelen, contact met u op te nemen en u een offerte
+        te sturen. Wij gebruiken uw gegevens niet voor nieuwsbrieven of andere marketing zonder uw toestemming.
+      </p>
+
+      <h2>Hoe lang bewaren wij uw gegevens?</h2>
+      <p>
+        Wij bewaren uw gegevens niet langer dan nodig is voor het behandelen van uw aanvraag en de eventuele
+        uitvoering van de opdracht, tenzij wij wettelijk verplicht zijn gegevens langer te bewaren.
+      </p>
+
+      <h2>Delen met derden</h2>
+      <p>
+        Wij verkopen uw gegevens niet. Voor het versturen van formulierberichten per e-mail maken wij gebruik van een
+        e-maildienst. Gegevens worden alleen met derden gedeeld als dat nodig is voor het behandelen van uw aanvraag
+        of als wij daartoe wettelijk verplicht zijn.
+      </p>
+
+      <h2>Cookies</h2>
+      <p>
+        Deze website plaatst geen tracking- of advertentiecookies.
+      </p>
+
+      <h2>Uw rechten</h2>
+      <p>
+        U kunt ons vragen om de gegevens die wij van u hebben in te zien, te corrigeren of te verwijderen. Neem
+        daarvoor contact met ons op.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Vragen over deze privacyverklaring? Neem contact op via
+        <ContactValue type="email" value={site.contact.email} /> of
+        <ContactValue type="phone" value={site.contact.phone} />.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

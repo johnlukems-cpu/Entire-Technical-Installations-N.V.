@@ -1,0 +1,55 @@
+---
+// Detailpagina voor echte projecten uit src/data/projects.ts.
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import Icon from '../../components/Icon.astro';
+import { projects, type Project } from '../../data/projects';
+import { getService } from '../../data/services';
+
+export const getStaticPaths = (() =>
+  projects.map((project) => ({ params: { slug: project.slug }, props: { project } }))) satisfies GetStaticPaths;
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const service = getService(project.service);
+---
+
+<BaseLayout title={`${project.title} – project`} description={project.summary}>
+  <PageHero
+    eyebrow={service?.title ?? 'Project'}
+    title={project.title}
+    intro={project.summary}
+    crumbs={[{ label: 'Projecten', href: '/projecten/' }, { label: project.title }]}
+  />
+  <section class="section">
+    <div class="container project">
+      {project.image && <img src={project.image} alt={project.imageAlt ?? ''} class="project-img" width="1200" height="750" />}
+      {(project.location || project.year) && <p class="meta">{[project.location, project.year].filter(Boolean).join(' · ')}</p>}
+      {project.body.map((p) => <p>{p}</p>)}
+      <p>
+        <a href="/projecten/" class="link-arrow">Terug naar alle projecten <Icon name="arrow-right" /></a>
+      </p>
+    </div>
+  </section>
+  <CtaBanner />
+</BaseLayout>
+
+<style>
+  .project {
+    max-width: 860px;
+  }
+  .project-img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+    margin-bottom: 24px;
+  }
+  .meta {
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+</style>

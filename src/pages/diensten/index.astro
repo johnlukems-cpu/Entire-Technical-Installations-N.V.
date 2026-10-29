@@ -1,0 +1,206 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import { services } from '../../data/services';
+---
+
+<BaseLayout
+  title="Diensten – technische installaties in Suriname"
+  description="Elektrische installaties, airconditioning en koeling, water en sanitair, gas en verwarming, alarminstallaties en technisch onderhoud: bekijk alle diensten van ETI N.V. in Suriname."
+>
+  <PageHero
+    eyebrow="Onze diensten"
+    title="Zes vakgebieden, één betrouwbare partner"
+    intro="Van elektrische installaties en airconditioning tot water-, gas- en alarminstallaties en technisch onderhoud. Bekijk hieronder wat wij voor uw woning of bedrijfspand kunnen betekenen."
+    crumbs={[{ label: 'Diensten' }]}
+  />
+
+  <nav class="service-jump" aria-label="Spring naar dienst">
+    <div class="container">
+      <ul>
+        {
+          services.map((s) => (
+            <li>
+              <a href={`#${s.slug}`}>
+                <span class={`mini accent-${s.accent}`}>
+                  <Icon name={s.icon} size={18} />
+                </span>
+                {s.shortTitle}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </nav>
+
+  <div class="services-list">
+    {
+      services.map((s, i) => (
+        <section id={s.slug} class:list={['section', 'service-row', { 'section--soft': i % 2 === 1 }]} aria-labelledby={`${s.slug}-titel`}>
+          <div class="container row-inner">
+            <div class="row-visual" data-reveal>
+              <div class={`visual-tile tile--${s.accent}`}>
+                <Icon name={s.icon} size={88} strokeWidth={1.5} />
+                <span class="tile-num">0{i + 1}</span>
+              </div>
+            </div>
+            <div class="row-copy" data-reveal>
+              <h2 id={`${s.slug}-titel`}>{s.title}</h2>
+              <p class="row-desc">{s.description}</p>
+              <h3 class="tasks-title">Werkzaamheden</h3>
+              <ul class="checklist">
+                {s.tasks.map((t) => (
+                  <li>
+                    <Icon name="check" />
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+              <div class="row-actions">
+                <a href={`/diensten/${s.slug}/`} class="btn btn--outline">
+                  Meer informatie<span class="visually-hidden"> over {s.title.toLowerCase()}</span>
+                  <Icon name="arrow-right" class="icon-arrow" />
+                </a>
+                <a href={`/contact/?dienst=${s.slug}#offerte`} class="btn btn--yellow">
+                  Vraag een offerte aan
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <CtaBanner />
+</BaseLayout>
+
+<style>
+  .service-jump {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+  .service-jump ul {
+    list-style: none;
+    margin: 0;
+    padding: 14px 0;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  .service-jump a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    padding: 8px 14px 8px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--navy);
+    text-decoration: none;
+  }
+  .service-jump a:hover {
+    border-color: var(--blue);
+    background: var(--bg-soft);
+  }
+  .mini {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  .row-inner {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+  }
+  .service-row:nth-child(even) .row-visual {
+    order: 2;
+  }
+  @media (max-width: 860px) {
+    .row-inner {
+      grid-template-columns: 1fr;
+    }
+    .service-row:nth-child(even) .row-visual {
+      order: 0;
+    }
+    .visual-tile {
+      max-width: 360px;
+    }
+  }
+  .visual-tile {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    display: grid;
+    place-items: center;
+    color: var(--white);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .visual-tile::after {
+    content: '';
+    position: absolute;
+    left: -20%;
+    right: -20%;
+    bottom: -45%;
+    height: 70%;
+    border-radius: 50%;
+    border-top: 10px solid var(--yellow);
+  }
+  .tile--blue {
+    background-color: var(--blue);
+  }
+  .tile--navy {
+    background-color: var(--navy);
+  }
+  .tile--yellow {
+    background-color: var(--yellow);
+    color: var(--navy);
+  }
+  .tile--yellow::after {
+    border-top-color: var(--blue);
+  }
+  .tile--red {
+    background-color: var(--red);
+  }
+  .tile-num {
+    position: absolute;
+    top: 18px;
+    left: 22px;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.1rem;
+    opacity: 0.8;
+  }
+  .row-desc {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+  }
+  .tasks-title {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--blue);
+    margin-top: 1.4em;
+  }
+  .row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+  }
+</style>

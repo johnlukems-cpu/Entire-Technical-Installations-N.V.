@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout
+  title="Algemene voorwaarden"
+  description="Algemene voorwaarden van Entire Technical Installations N.V."
+>
+  <PageHero title="Algemene voorwaarden" crumbs={[{ label: 'Algemene voorwaarden' }]} />
+  <section class="section">
+    <div class="container prose">
+      <div class="placeholder-box" role="note">
+        <span class="placeholder-tag">Plaatshouder</span>
+        <p style="margin:0">
+          <strong>De algemene voorwaarden van ETI N.V. worden binnenkort op deze pagina gepubliceerd.</strong>
+          Heeft u ze nu al nodig? Neem dan contact met ons op; wij sturen ze u graag toe.
+        </p>
+      </div>
+      <p style="margin-top:24px">
+        <a href="/contact/" class="link-arrow">Neem contact op <Icon name="arrow-right" /></a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

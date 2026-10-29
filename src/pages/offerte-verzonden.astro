@@ -1,0 +1,19 @@
+---
+// Bevestigingspagina voor bezoekers zonder JavaScript (de server stuurt hierheen ná succesvolle aflevering).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout title="Offerteaanvraag verzonden" description="Uw offerteaanvraag is verzonden." noindex>
+  <PageHero
+    title="Bedankt, uw offerteaanvraag is verzonden"
+    intro="Wij hebben uw aanvraag in goede orde ontvangen en nemen zo spoedig mogelijk contact met u op via de door u gekozen contactmethode."
+    crumbs={[{ label: 'Contact', href: '/contact/' }, { label: 'Aanvraag verzonden' }]}
+  />
+  <section class="section">
+    <div class="container">
+      <a href="/" class="btn btn--primary">Terug naar de homepage <Icon name="arrow-right" class="icon-arrow" /></a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout title="Pagina niet gevonden" description="Deze pagina bestaat niet (meer)." noindex>
+  <PageHero title="Pagina niet gevonden" intro="De pagina die u zoekt bestaat niet (meer) of is verplaatst." />
+  <section class="section">
+    <div class="container" style="display:flex;flex-wrap:wrap;gap:12px">
+      <a href="/" class="btn btn--primary">Naar de homepage <Icon name="arrow-right" class="icon-arrow" /></a>
+      <a href="/diensten/" class="btn btn--outline">Bekijk onze diensten</a>
+      <a href="/contact/" class="btn btn--outline">Contact</a>
+    </div>
+  </section>
+</BaseLayout>

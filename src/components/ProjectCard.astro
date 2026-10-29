@@ -1,0 +1,160 @@
+---
+import Icon from './Icon.astro';
+import type { Project } from '../data/projects';
+import type { Service } from '../data/services';
+
+interface Props {
+  service: Service;
+  /** Ontbreekt dit, dan wordt een herkenbare plaatshouder getoond. */
+  project?: Project;
+}
+const { service, project } = Astro.props;
+---
+
+<article class:list={['project-card', { 'is-placeholder': !project }]} data-category={service.slug} data-reveal>
+  <div class={`project-media media--${service.accent}`}>
+    {
+      project?.image ? (
+        <img src={project.image} alt={project.imageAlt ?? ''} loading="lazy" decoding="async" width="640" height="420" />
+      ) : (
+        <div class="media-fallback" aria-hidden="true">
+          <Icon name={service.icon} size={56} strokeWidth={1.6} />
+          {!project && <span>Projectfoto volgt</span>}
+        </div>
+      )
+    }
+    <span class="project-cat">{service.title}</span>
+  </div>
+  <div class="project-body">
+    {
+      project ? (
+        <>
+          <h3>{project.title}</h3>
+          {(project.location || project.year) && (
+            <p class="project-meta">{[project.location, project.year].filter(Boolean).join(' · ')}</p>
+          )}
+          <p>{project.summary}</p>
+          <a href={`/projecten/${project.slug}/`} class="link-arrow stretched">
+            Bekijk project<span class="visually-hidden">: {project.title}</span>
+            <Icon name="arrow-right" />
+          </a>
+        </>
+      ) : (
+        <>
+          <span class="placeholder-tag">Plaatshouder</span>
+          <h3>Project: {service.title.toLowerCase()}</h3>
+          <p>
+            Hier verschijnt binnenkort een gerealiseerd project van ETI N.V. in deze categorie, met foto's en
+            een korte beschrijving.
+          </p>
+          <a href={`/diensten/${service.slug}/`} class="link-arrow stretched">
+            Bekijk deze dienst<span class="visually-hidden">: {service.title}</span>
+            <Icon name="arrow-right" />
+          </a>
+        </>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .project-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--white);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+  .project-card[hidden] {
+    display: none;
+  }
+  .project-media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+  .project-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .media-fallback {
+    height: 100%;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.92);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.9rem;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .media--blue,
+  .media--navy {
+    background-color: var(--blue);
+  }
+  .media--navy {
+    background-color: var(--navy);
+  }
+  .media--yellow {
+    background-color: #d9a300;
+  }
+  .media--red {
+    background-color: #c9441a;
+  }
+  .project-cat {
+    position: absolute;
+    left: 14px;
+    bottom: 14px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--navy);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.78rem;
+  }
+  .project-body {
+    padding: 22px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .project-body h3 {
+    font-size: 1.12rem;
+    margin-bottom: 8px;
+  }
+  .project-body p {
+    color: var(--text-muted);
+    font-size: 0.97rem;
+    flex: 1;
+  }
+  .project-meta {
+    font-size: 0.88rem !important;
+    flex: none !important;
+    margin-bottom: 8px;
+  }
+  .is-placeholder {
+    border-style: dashed;
+    border-width: 2px;
+  }
+  .stretched::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+</style>

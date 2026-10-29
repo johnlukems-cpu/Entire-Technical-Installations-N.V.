@@ -1,0 +1,204 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import FeatureGrid from '../components/FeatureGrid.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import Icon from '../components/Icon.astro';
+import ContactValue from '../components/ContactValue.astro';
+import { coreValues } from '../data/content';
+import { services } from '../data/services';
+import { site } from '../data/site';
+
+const symbols = services.filter((s) => s.slug !== 'technisch-onderhoud-en-storingsservice');
+---
+
+<BaseLayout
+  title="Over ons – technisch installatiebedrijf in Suriname"
+  description="Leer Entire Technical Installations N.V. kennen: een technisch installatiebedrijf voor particulieren en bedrijven in Suriname, gericht op kwaliteit, veiligheid en heldere communicatie."
+>
+  <PageHero
+    eyebrow="Over ons"
+    title="Uw partner in technische installaties"
+    intro="Entire Technical Installations N.V. ondersteunt particulieren en bedrijven in Suriname met uiteenlopende technische installatiewerkzaamheden."
+    crumbs={[{ label: 'Over ons' }]}
+  />
+
+  <section class="section">
+    <div class="container about-grid">
+      <div data-reveal>
+        <p class="eyebrow">Wie wij zijn</p>
+        <h2>Technisch vakwerk voor woning en bedrijf</h2>
+        <p class="lead">
+          Entire Technical Installations N.V. is een technisch installatiebedrijf dat particulieren en bedrijven in
+          Suriname ondersteunt met uiteenlopende technische installatiewerkzaamheden. Wij richten ons op kwaliteit,
+          veiligheid, heldere communicatie en praktische oplossingen die aansluiten bij de behoeften van onze klanten.
+        </p>
+        <p>
+          Onze naam zegt het al: wij verzorgen het geheel aan technische installaties in een pand. Daardoor kunt u voor
+          elektra, airconditioning, water, gas, alarminstallaties en onderhoud bij één aanspreekpunt terecht.
+        </p>
+        <div class="placeholder-box story" role="note">
+          <span class="placeholder-tag">Plaatshouder</span>
+          <p>
+            <strong>Ons verhaal.</strong> Hier komt aanvullende informatie over de achtergrond van ETI N.V., zoals het
+            ontstaan van het bedrijf en het team. Deze tekst wordt toegevoegd zodra de gegevens zijn aangeleverd.
+          </p>
+        </div>
+      </div>
+
+      <div class="logo-meaning" data-reveal>
+        <h3>Waar ons logo voor staat</h3>
+        <p>Elk symbool in het logo van ETI N.V. staat voor een van onze vakgebieden.</p>
+        <ul>
+          {
+            symbols.map((s) => (
+              <li>
+                <span class={`icon-badge accent-${s.accent}`}>
+                  <Icon name={s.icon} />
+                </span>
+                <span>
+                  <strong>De {s.logoSymbol}</strong>
+                  <a href={`/diensten/${s.slug}/`}>{s.title}</a>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--soft" aria-labelledby="waarden-titel">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <p class="eyebrow">Kernwaarden</p>
+        <h2 id="waarden-titel">Waar wij voor staan</h2>
+      </div>
+      <FeatureGrid items={coreValues} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="gegevens-titel">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Bedrijfsgegevens</p>
+        <h2 id="gegevens-titel">ETI N.V. in het kort</h2>
+      </div>
+      <dl class="facts">
+        <div>
+          <dt>Bedrijfsnaam</dt>
+          <dd>{site.name}</dd>
+        </div>
+        <div>
+          <dt>Werkgebied</dt>
+          <dd>Suriname</dd>
+        </div>
+        <div>
+          <dt>Opgericht</dt>
+          <dd><ContactValue type="text" value={site.company.founded} /></dd>
+        </div>
+        <div>
+          <dt>KKF-inschrijving</dt>
+          <dd><ContactValue type="text" value={site.company.kkfNumber} /></dd>
+        </div>
+        <div>
+          <dt>Certificeringen en erkenningen</dt>
+          <dd><ContactValue type="text" value={site.company.certifications?.join(', ') ?? null} /></dd>
+        </div>
+        <div>
+          <dt>Klanten</dt>
+          <dd>Particulieren en bedrijven</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <CtaBanner />
+</BaseLayout>
+
+<style>
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .lead {
+    font-size: 1.15rem;
+  }
+  .story {
+    margin-top: 28px;
+  }
+  .story p {
+    margin: 0;
+  }
+  .logo-meaning {
+    background: var(--bg-soft);
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    border-top: 5px solid var(--yellow);
+  }
+  .logo-meaning > p {
+    color: var(--text-muted);
+  }
+  .logo-meaning ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0;
+    display: grid;
+    gap: 14px;
+  }
+  .logo-meaning li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo-meaning .icon-badge {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+  }
+  .logo-meaning .icon-badge :global(.icon) {
+    width: 24px;
+    height: 24px;
+  }
+  .logo-meaning strong {
+    display: block;
+    color: var(--navy);
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    text-transform: capitalize;
+  }
+  .logo-meaning a {
+    font-size: 0.95rem;
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 16px;
+    margin: 0;
+  }
+  .facts div {
+    padding: 20px 22px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .facts dt {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 6px;
+  }
+  .facts dd {
+    margin: 0;
+    font-weight: 500;
+  }
+</style>

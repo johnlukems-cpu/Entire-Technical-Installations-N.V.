@@ -1,0 +1,102 @@
+---
+// Paginakop voor subpagina's, met kruimelpad.
+interface Props {
+  title: string;
+  intro?: string;
+  eyebrow?: string;
+  crumbs?: { label: string; href?: string }[];
+}
+const { title, intro, eyebrow, crumbs = [] } = Astro.props;
+const trail = [{ label: 'Home', href: '/' }, ...crumbs];
+---
+
+<section class="page-hero">
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="container page-hero-inner">
+    <nav aria-label="Kruimelpad" class="crumbs">
+      <ol>
+        {
+          trail.map((c, i) => (
+            <li>
+              {c.href && i < trail.length - 1 ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {intro && <p class="intro">{intro}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy) 45%, var(--blue) 100%);
+    color: #d3def3;
+    padding-block: clamp(48px, 8vw, 92px) clamp(48px, 7vw, 80px);
+  }
+  .page-hero::after {
+    content: '';
+    position: absolute;
+    left: -10%;
+    right: -10%;
+    bottom: -60px;
+    height: 120px;
+    border-radius: 50%;
+    border-top: 10px solid var(--yellow);
+    opacity: 0.85;
+  }
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(90deg, transparent, #000 60%);
+  }
+  .page-hero-inner {
+    position: relative;
+    z-index: 1;
+  }
+  h1 {
+    color: var(--white);
+    max-width: 900px;
+    font-size: clamp(2rem, 4.4vw, 3.1rem);
+  }
+  .eyebrow {
+    color: var(--yellow);
+  }
+  .intro {
+    max-width: 720px;
+    font-size: 1.15rem;
+    margin: 0;
+  }
+  .crumbs ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0;
+    margin: 0 0 22px;
+    font-size: 0.88rem;
+  }
+  .crumbs li + li::before {
+    content: '/';
+    margin-right: 6px;
+    opacity: 0.5;
+  }
+  .crumbs a {
+    color: #c4d3ee;
+  }
+  .crumbs a:hover {
+    color: var(--yellow);
+  }
+  .crumbs [aria-current] {
+    color: var(--white);
+  }
+</style>

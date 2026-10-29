@@ -1,0 +1,33 @@
+---
+// Toont een contactgegeven, of een herkenbare plaatshouder als het nog ontbreekt.
+import { PLACEHOLDER_TEXT } from '../data/site';
+
+interface Props {
+  type: 'phone' | 'email' | 'whatsapp' | 'text';
+  value: string | null;
+}
+const { type, value } = Astro.props;
+
+let href: string | undefined;
+if (value) {
+  if (type === 'phone') href = `tel:${value.replace(/[^\d+]/g, '')}`;
+  if (type === 'email') href = `mailto:${value}`;
+  if (type === 'whatsapp') href = `https://wa.me/${value.replace(/\D/g, '')}`;
+}
+---
+
+{
+  value ? (
+    href ? (
+      <a href={href} rel={type === 'whatsapp' ? 'noopener' : undefined}>
+        {type === 'whatsapp' ? 'Stuur een WhatsApp-bericht' : value}
+      </a>
+    ) : (
+      <span>{value}</span>
+    )
+  ) : (
+    <span class="placeholder" title="Dit gegeven wordt nog aangeleverd">
+      {PLACEHOLDER_TEXT}
+    </span>
+  )
+}

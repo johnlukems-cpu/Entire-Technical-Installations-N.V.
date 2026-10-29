@@ -1,0 +1,106 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+import { services } from '../data/services';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Laat de standaard " | ETI N.V." achtervoegsel weg. */
+  rawTitle?: boolean;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>[];
+}
+
+const { title, description, rawTitle = false, noindex = false, jsonLd = [] } = Astro.props;
+const fullTitle = rawTitle ? title : `${title} | ${site.shortName}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/images/og-image.jpg', Astro.site).href;
+
+const business: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'HomeAndConstructionBusiness',
+  '@id': new URL('/#bedrijf', Astro.site).href,
+  name: site.name,
+  alternateName: site.shortName,
+  slogan: site.slogan,
+  description: site.description,
+  url: new URL('/', Astro.site).href,
+  logo: new URL('/images/eti-logo.png', Astro.site).href,
+  image: ogImage,
+  areaServed: { '@type': 'Country', name: 'Suriname' },
+  knowsAbout: services.map((s) => s.title),
+};
+if (site.contact.phone) business.telephone = site.contact.phone;
+if (site.contact.email) business.email = site.contact.email;
+if (site.contact.address)
+  business.address = {
+    '@type': 'PostalAddress',
+    streetAddress: site.contact.address,
+    addressCountry: 'SR',
+  };
+if (site.social.length) business.sameAs = site.social.map((s) => s.url);
+
+const structuredData = [business, ...jsonLd];
+---
+
+<!doctype html>
+<html lang="nl-SR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#082d68" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="nl_SR" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="skip-link" href="#inhoud">Direct naar de inhoud</a>
+    <Header />
+    <main id="inhoud" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Subtiele animaties bij het in beeld scrollen.
+      const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-visible');
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+        );
+        items.forEach((el) => io.observe(el));
+      } else {
+        items.forEach((el) => el.classList.add('is-visible'));
+      }
+    </script>
+  </body>
+</html>

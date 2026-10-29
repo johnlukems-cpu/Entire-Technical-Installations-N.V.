@@ -1,0 +1,93 @@
+---
+import Icon from './Icon.astro';
+import type { Feature } from '../data/content';
+
+interface Props {
+  items: Feature[];
+  variant?: 'light' | 'dark';
+  numbered?: boolean;
+}
+const { items, variant = 'light', numbered = false } = Astro.props;
+---
+
+<ul class:list={['features', `features--${variant}`, { 'features--numbered': numbered }]} role="list">
+  {
+    items.map((f, i) => (
+      <li class="feature" data-reveal style={`--reveal-delay:${i * 0.08}s`}>
+        <span class="feature-icon">
+          <Icon name={f.icon} />
+          {numbered && <span class="feature-num" aria-hidden="true">{i + 1}</span>}
+        </span>
+        <h3>{f.title}</h3>
+        <p>{f.text}</p>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: clamp(20px, 2.5vw, 28px);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  }
+  .feature {
+    position: relative;
+    padding: 30px 28px;
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+  .feature p {
+    margin: 0;
+    color: var(--text-muted);
+  }
+  .feature-icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--blue);
+    color: var(--white);
+    margin-bottom: 20px;
+    box-shadow: 0 8px 18px rgba(18, 73, 165, 0.28);
+  }
+  .feature-icon .icon {
+    width: 28px;
+    height: 28px;
+  }
+  .feature-num {
+    position: absolute;
+    right: -8px;
+    top: -8px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--yellow);
+    color: var(--navy);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 0.8rem;
+  }
+  .features--dark .feature {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: none;
+  }
+  .features--dark .feature p {
+    color: #c4d3ee;
+  }
+  .features--dark .feature-icon {
+    background: var(--yellow);
+    color: var(--navy);
+    box-shadow: none;
+  }
+</style>

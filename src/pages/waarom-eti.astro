@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import FeatureGrid from '../components/FeatureGrid.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Icon from '../components/Icon.astro';
+import { whyEti, processSteps } from '../data/content';
+import { services } from '../data/services';
+---
+
+<BaseLayout
+  title="Waarom kiezen voor ETI N.V.?"
+  description="Waarom ETI N.V.? Betrouwbaarheid en kwaliteit, heldere communicatie en vakbekwame technische professionals voor installaties in woningen en bedrijven in Suriname."
+>
+  <PageHero
+    eyebrow="Waarom ETI?"
+    title="Waarom kiezen voor ETI N.V.?"
+    intro="Een technische installatie moet veilig zijn en betrouwbaar werken. Daarom besteden wij aandacht aan zorgvuldig werk, duidelijke afspraken en praktische oplossingen."
+    crumbs={[{ label: 'Waarom ETI?' }]}
+  />
+
+  <section class="section" aria-label="Onze kernpunten">
+    <div class="container">
+      <FeatureGrid items={whyEti} />
+    </div>
+  </section>
+
+  <section class="section section--navy" aria-labelledby="partner-titel">
+    <div class="container split">
+      <div data-reveal>
+        <p class="eyebrow">Alles onder één dak</p>
+        <h2 id="partner-titel">Eén aanspreekpunt voor meerdere installaties</h2>
+        <p>
+          Bij veel projecten komen verschillende technische disciplines samen. Omdat ETI N.V. werkt aan elektrische,
+          klimaat-, water-, gas- en alarminstallaties, hoeft u niet met meerdere partijen af te stemmen.
+        </p>
+      </div>
+      <ul class="disciplines" data-reveal>
+        {
+          services.map((s) => (
+            <li>
+              <a href={`/diensten/${s.slug}/`}>
+                <Icon name={s.icon} size={20} />
+                {s.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--soft" aria-labelledby="werkwijze-titel">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <p class="eyebrow">Werkwijze</p>
+        <h2 id="werkwijze-titel">Van aanvraag tot uitvoering</h2>
+        <p>Zo verloopt een opdracht bij ETI N.V. in grote lijnen.</p>
+      </div>
+      <FeatureGrid items={processSteps} numbered />
+    </div>
+  </section>
+
+  <Testimonials />
+
+  <CtaBanner />
+</BaseLayout>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+  }
+  @media (max-width: 860px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+  .disciplines {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .disciplines a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--white);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+  .disciplines a:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+  .disciplines .icon {
+    color: var(--yellow);
+  }
+</style>

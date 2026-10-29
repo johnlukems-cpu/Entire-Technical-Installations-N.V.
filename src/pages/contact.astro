@@ -1,0 +1,177 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import Icon from '../components/Icon.astro';
+import ContactValue from '../components/ContactValue.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title="Contact en offerte aanvragen"
+  description="Vraag vrijblijvend een offerte aan bij ETI N.V. voor elektrische installaties, airconditioning, water, gas, alarminstallaties of technisch onderhoud in Suriname."
+>
+  <PageHero
+    eyebrow="Contact"
+    title="Vraag een offerte aan"
+    intro="Vertel ons wat u nodig heeft. Wij nemen zo spoedig mogelijk contact met u op om uw aanvraag te bespreken."
+    crumbs={[{ label: 'Contact' }]}
+  />
+
+  <section class="section" id="offerte">
+    <div class="container contact-grid">
+      <div class="form-card">
+        <h2>Offerteformulier</h2>
+        <p class="form-lead">Hoe meer informatie u geeft, hoe beter wij uw aanvraag kunnen beoordelen.</p>
+        <QuoteForm />
+      </div>
+
+      <aside class="contact-aside" aria-labelledby="gegevens-titel">
+        <div class="info-card">
+          <h2 id="gegevens-titel">Contactgegevens</h2>
+          <p class="company">{site.name}</p>
+          <ul class="info-list">
+            <li>
+              <span class="info-icon"><Icon name="phone" size={20} /></span>
+              <span><strong>Telefoon</strong><ContactValue type="phone" value={site.contact.phone} /></span>
+            </li>
+            {
+              site.contact.whatsapp && (
+                <li>
+                  <span class="info-icon"><Icon name="message-circle" size={20} /></span>
+                  <span><strong>WhatsApp</strong><ContactValue type="whatsapp" value={site.contact.whatsapp} /></span>
+                </li>
+              )
+            }
+            <li>
+              <span class="info-icon"><Icon name="mail" size={20} /></span>
+              <span><strong>E-mail</strong><ContactValue type="email" value={site.contact.email} /></span>
+            </li>
+            <li>
+              <span class="info-icon"><Icon name="map-pin" size={20} /></span>
+              <span><strong>Adres</strong><ContactValue type="text" value={site.contact.address} /></span>
+            </li>
+            <li>
+              <span class="info-icon"><Icon name="clock" size={20} /></span>
+              <span>
+                <strong>Openingstijden</strong>
+                {
+                  site.contact.openingHours ? (
+                    site.contact.openingHours.map((o) => <span class="hours">{o.days}: {o.hours}</span>)
+                  ) : (
+                    <ContactValue type="text" value={null} />
+                  )
+                }
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="info-card info-card--soft">
+          <h3>Wat gebeurt er na uw aanvraag?</h3>
+          <ol class="steps">
+            <li>Wij beoordelen uw aanvraag.</li>
+            <li>Wij nemen contact met u op via de door u gekozen contactmethode.</li>
+            <li>Indien nodig plannen wij een bezoek om de situatie te bekijken.</li>
+            <li>U ontvangt een duidelijke offerte.</li>
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: clamp(28px, 4vw, 48px);
+    align-items: start;
+  }
+  @media (max-width: 960px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: clamp(24px, 4vw, 44px);
+    box-shadow: var(--shadow);
+  }
+  .form-card h2 {
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+  }
+  .form-lead {
+    color: var(--text-muted);
+  }
+  .contact-aside {
+    display: grid;
+    gap: 20px;
+  }
+  .info-card {
+    background: var(--navy);
+    color: #d3def3;
+    border-radius: var(--radius-lg);
+    padding: 30px 28px;
+  }
+  .info-card h2,
+  .info-card h3 {
+    color: var(--white);
+    font-size: 1.3rem;
+  }
+  .company {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--yellow);
+  }
+  .info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 18px;
+  }
+  .info-list li {
+    display: flex;
+    gap: 14px;
+  }
+  .info-list strong {
+    display: block;
+    color: var(--white);
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+  }
+  .info-list a {
+    color: var(--white);
+  }
+  .info-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(255, 196, 0, 0.16);
+    color: var(--yellow);
+  }
+  .hours {
+    display: block;
+  }
+  .info-card--soft {
+    background: var(--bg-soft);
+    color: var(--text);
+  }
+  .info-card--soft h3 {
+    color: var(--navy);
+    font-size: 1.15rem;
+  }
+  .steps {
+    margin: 0;
+    padding-left: 1.2em;
+    display: grid;
+    gap: 8px;
+  }
+</style>
