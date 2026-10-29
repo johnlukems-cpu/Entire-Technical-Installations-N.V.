@@ -3,8 +3,8 @@
 Nederlandstalige bedrijfswebsite voor ETI N.V. — *Quality Installations & Reliable Solutions*.
 
 - **Frontend:** [Astro](https://astro.build) (statische HTML, nauwelijks JavaScript), eigen componenten en huisstijl.
-- **Backend:** kleine Node/Express-server (`server/`) die de gebouwde site serveert en het offerteformulier
-  afhandelt via SMTP (nodemailer).
+- **Backend:** offerteformulier via SMTP (nodemailer): als Vercel-functie (`api/offerte.mjs`) of via de
+  meegeleverde Node/Express-server (`server/`) op een eigen host.
 - **Lettertypen:** Montserrat (koppen) en Inter (tekst), zelf gehost — geen externe verzoeken.
 
 ## Snel starten
@@ -64,11 +64,28 @@ Na elke wijziging: `npm run build` en de server herstarten.
 
 ## Beveiliging
 
-Strikte Content-Security-Policy (hashes van inline scripts worden bij het starten automatisch berekend),
+Strikte Content-Security-Policy zonder inline scripts (`vercel.json` of `server/app.mjs`),
 `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, HSTS achter HTTPS.
 Geen API-sleutels of wachtwoorden in de frontend; alle geheimen staan in `.env` op de server.
 
-## Publiceren
+## Publiceren op Vercel (aanbevolen)
+
+De repository is klaar voor Vercel: `vercel.json` zet build, uitvoermap en beveiligingsheaders,
+en `api/offerte.mjs` draait het offerteformulier als Vercel-functie (de Express-server wordt
+op Vercel niet gebruikt).
+
+1. Ga naar [vercel.com/new](https://vercel.com/new) en importeer deze GitHub-repository.
+   Framework, build-commando en uitvoermap worden automatisch uit `vercel.json` gehaald.
+2. Stel onder *Settings → Environment Variables* in (zie `.env.example`):
+   `SITE_URL`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `MAIL_TO`
+   en optioneel `PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY`.
+3. Deploy. Daarna wordt elke push naar `main` automatisch gepubliceerd.
+4. Koppel het eigen domein onder *Settings → Domains* en zet `SITE_URL` op dat domein (opnieuw deployen).
+
+Let op: op Vercel is de rate limiting per functie-instantie en dus minder streng. Voor extra
+spambescherming wordt Cloudflare Turnstile aanbevolen.
+
+## Publiceren op een eigen server
 
 Iedere host met Node.js 20+ volstaat (VPS, Render, Railway, Fly.io, enz.):
 

@@ -9,6 +9,8 @@ export default defineConfig({
   site,
   trailingSlash: 'always',
   build: { format: 'directory' },
+  // Geen inline scripts, zodat een strikte Content-Security-Policy (zonder 'unsafe-inline') mogelijk is.
+  vite: { build: { assetsInlineLimit: 0 } },
   integrations: [
     sitemap({
       filter: (page) => !/\/(404|offerte-verzonden|offerte-mislukt)\//.test(page),
